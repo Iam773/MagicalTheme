@@ -2290,10 +2290,10 @@ class MagicalTheme {
                         closePopup("' . $popupId . '");
                     }, ' . $showtime . ');
                 }
-            }, ' . $afterTime . ');
-        })();
+            }, ' . $afterTime . '); 
+        })(); 
         </script>';
-        
+         
         // Return empty string as the actual output has been echoed directly
         return '';
     }
