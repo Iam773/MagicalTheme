@@ -26,5 +26,25 @@ $theme->addNavItem('Shop', [
 
 $theme->addNavItem('Leaderboard', 'leaderboard.php');
 
+// Check if user is logged in
+if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
+    // User is logged in, add profile button
+    $theme->addNavItem('Profile', [
+        'url' => 'profile.php',
+        'icon' => 'fa-user'
+    ]);
+} else {
+    // User is not logged in, add login and register buttons
+    $theme->addNavItem('Login', [
+        'url' => 'auth/login.php',
+        'icon' => 'fa-sign-in-alt'
+    ]);
+    
+    $theme->addNavItem('Register', [
+        'url' => 'register.php',
+        'icon' => 'fa-user-plus'
+    ]);
+}
+
 // var_dump( $_SESSION['user']);
 ?>

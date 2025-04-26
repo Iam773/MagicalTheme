@@ -23,7 +23,7 @@ class DatabaseManager
      */
     private function __construct($dbPath = null)
     {
-        $dbPath = $dbPath ?? __DIR__ . '/../database.sqlite';
+        $dbPath = $dbPath ?? __DIR__ . '/../db/games.db';
         
         try {
             $this->connection = new PDO('sqlite:' . $dbPath);
