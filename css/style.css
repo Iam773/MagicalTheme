@@ -1,0 +1,150 @@
+/* Custom styles for card game */
+.game-card {
+    position: relative;
+    width: 180px;
+    height: 250px;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    background: linear-gradient(135deg, #f0f9ff 0%, #e1f5fe 100%);
+    box-shadow: 0 5px 15px rgba(56, 189, 248, 0.2), 0 0 0 1px rgba(56, 189, 248, 0.1);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+}
+
+.game-card:hover {
+    transform: translateY(-10px) rotateY(10deg);
+    box-shadow: 0 15px 30px rgba(56, 189, 248, 0.4), 0 0 0 2px rgba(56, 189, 248, 0.2);
+    border-color: rgba(56, 189, 248, 0.4);
+}
+
+.game-card-image {
+    height: 150px;
+    width: 100%;
+    object-fit: cover;
+    border-bottom: 3px solid #38bdf8;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card-stats {
+    position: absolute;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    bottom: 0;
+    padding: 5px 10px;
+    background: linear-gradient(to bottom, rgba(12, 74, 110, 0.7), rgba(12, 74, 110, 0.9));
+    color: white;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(2px);
+    border-radius: 0 0 10px 10px;
+}
+
+.card-stat {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: 0.8rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    margin: 0 3px;
+}
+
+.power-stat {
+    background: linear-gradient(45deg, #ff6b6b, #ee5253);
+}
+
+.health-stat {
+    background: linear-gradient(45deg, #1dd1a1, #10ac84);
+}
+
+.mana-stat {
+    background: linear-gradient(45deg, #5f27cd, #341f97);
+}
+
+.card-rarity {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+}
+
+.rarity-common {
+    background-color: #b2bec3;
+    box-shadow: 0 0 5px #b2bec3;
+}
+
+.rarity-uncommon {
+    background-color: #55efc4;
+    box-shadow: 0 0 5px #55efc4;
+}
+
+.rarity-rare {
+    background-color: #74b9ff;
+    box-shadow: 0 0 8px #74b9ff;
+}
+
+.rarity-epic {
+    background-color: #a29bfe;
+    box-shadow: 0 0 10px #a29bfe;
+}
+
+.game-banner {
+    background-image: linear-gradient(to right, #0284c7, #38bdf8);
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+.game-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath opacity='.5' d='M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    z-index: 0;
+}
+
+.game-banner > * {
+    position: relative;
+    z-index: 1;
+}
+
+.player-stats {
+    background: rgba(8, 47, 73, 0.8);
+    backdrop-filter: blur(4px);
+    border-radius: 15px;
+    border: 2px solid #38bdf8;
+}
+
+.daily-quest {
+    border-left: 4px solid #38bdf8;
+}
+
+/* Animation classes */
+.animate-float {
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
