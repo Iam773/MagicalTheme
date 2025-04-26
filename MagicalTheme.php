@@ -1443,10 +1443,6 @@ class MagicalTheme {
         if (!empty($customNavItems)) {
             $this->setNavItems(array_merge($this->navItems, $customNavItems));
         }
-        
-        // Get username from session
-        $username = isset($_SESSION['username']) ? htmlspecialchars($_SESSION['username']) : 'User';
-        
         // Build the navigation HTML with Tailwind classes
         $html = '
         <!-- Magical Navbar -->
@@ -1531,27 +1527,7 @@ class MagicalTheme {
         // User dropdown
         $html .= '
                         </div>
-                        <div class="relative ml-4 group" id="user-menu">
-                            <button class="flex items-center space-x-1 text-white px-3 py-2 rounded-lg hover:bg-white/10 focus:outline-none">
-                                <div class="w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                                    <span class="text-white">' . substr($username, 0, 1) . '</span>
-                                </div>
-                                <span class="font-itim">' . $username . '</span>
-                                <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                </svg>
-                            </button>
-                            <div class="hidden group-hover:block absolute right-0 mt-1 w-48 bg-white rounded-xl shadow-magical
-                                        border-t-2 border-primary py-2 z-50">
-                                <a href="profile.php" class="block px-4 py-2 font-itim text-dark hover:bg-primary/10 hover:text-primary rounded-lg mx-2">
-                                    <i class="fas fa-user-circle mr-2"></i> My Profile
-                                </a>
-                                <div class="border-t border-gray-100 my-1"></div>
-                                <a href="../controllers/logout.php" class="block px-4 py-2 font-itim text-dark hover:bg-danger/10 hover:text-danger rounded-lg mx-2">
-                                    <i class="fas fa-sign-out-alt mr-2"></i> Logout
-                                </a>
-                            </div>
-                        </div>
+                      
                     </div>
                 </div>
             </div>
@@ -2290,11 +2266,35 @@ class MagicalTheme {
                         closePopup("' . $popupId . '");
                     }, ' . $showtime . ');
                 }
-            }, ' . $afterTime . '); 
-        })(); 
+            }, ' . $afterTime . ');
+        })();
         </script>';
-         
+        
         // Return empty string as the actual output has been echoed directly
         return '';
+    }
+
+    public function renderUserNav($username){
+        echo '  <div class="relative ml-4 group" id="user-menu">
+                            <button class="flex items-center space-x-1 text-white px-3 py-2 rounded-lg hover:bg-white/10 focus:outline-none">
+                                <div class="w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                                    <span class="text-white">' . substr($username, 0, 1) . '</span>
+                                </div>
+                                <span class="font-itim">' . $username . '</span>
+                                <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div class="hidden group-hover:block absolute right-0 mt-1 w-48 bg-white rounded-xl shadow-magical
+                                        border-t-2 border-primary py-2 z-50">
+                                <a href="profile.php" class="block px-4 py-2 font-itim text-dark hover:bg-primary/10 hover:text-primary rounded-lg mx-2">
+                                    <i class="fas fa-user-circle mr-2"></i> My Profile
+                                </a>
+                                <div class="border-t border-gray-100 my-1"></div>
+                                <a href="../controllers/logout.php" class="block px-4 py-2 font-itim text-dark hover:bg-danger/10 hover:text-danger rounded-lg mx-2">
+                                    <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                                </a>
+                            </div>
+                        </div>';
     }
 }

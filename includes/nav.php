@@ -1,6 +1,11 @@
 <?php
 // This file contains the navigation bar that can be included in multiple pages
 
+// Start session if not already started
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
 // Check if $theme is set, otherwise create it
 if (!isset($theme) || !($theme instanceof MagicalTheme)) {
     require_once __DIR__ . '/../MagicalTheme.php';
@@ -17,7 +22,7 @@ if (!isset($navItems)) {
         'Card Collection' => [
             'url' => 'collection.php',
             'icon' => 'fa-layer-group',
-            'badge' => '42'
+            'badge' => '<span class="bg-warning/90 text-dark text-xs py-0.5 px-2 rounded-full font-bold">New</span>'
         ],
         'Battle Arena' => [
             'url' => 'battle.php',
@@ -34,11 +39,26 @@ if (!isset($navItems)) {
             'badge' => '<span class="bg-warning/90 text-dark text-xs py-0.5 px-2 rounded-full font-bold">New</span>'
         ],
         'Leaderboard' => 'leaderboard.php',
-        'Profile' => [
+    ];
+    
+    // Check if user is logged in (username exists in session)
+    if (isset($_SESSION['username'])) {
+        // Add Profile link for logged-in users
+        $navItems[$_SESSION['username']] = [
             'url' => 'profile.php',
             'icon' => 'fa-user'
-        ]
-    ];
+        ];
+    } else {
+        // Add Login and Register for guests
+        $navItems['Login'] = [
+            'url' => 'login.php',
+            'icon' => 'fa-sign-in-alt'
+        ];
+        $navItems['Register'] = [
+            'url' => 'register.php',
+            'icon' => 'fa-user-plus'
+        ];
+    }
     
     // Set active page based on current file
     $currentFile = basename($_SERVER['PHP_SELF']);
