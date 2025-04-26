@@ -56,36 +56,7 @@ class MagicalTheme {
     private $currentTheme = 'pink';
     
     // Default navigation items
-    private $navItems = [
-        'Dashboard' => [
-            'url' => 'dashboard.php',
-            'icon' => 'fa-dashboard',
-            'active' => false,
-            'badge' => null,
-            'submenu' => []
-        ],
-        // 'Attendance' => [
-        //     'url' => 'attendance.php',
-        //     'icon' => 'fa-calendar-check',
-        //     'active' => false,
-        //     'badge' => null,
-        //     'submenu' => []
-        // ],
-        // 'Leaves' => [
-        //     'url' => 'leaves.php',
-        //     'icon' => 'fa-calendar-xmark',
-        //     'active' => false,
-        //     'badge' => null,
-        //     'submenu' => []
-        // ],
-        // 'Reports' => [
-        //     'url' => 'reports.php',
-        //     'icon' => 'fa-chart-line',
-        //     'active' => false,
-        //     'badge' => null,
-        //     'submenu' => []
-        // ]
-    ];
+    public $navItems = [];
     
     /**
      * Renders a magical-themed button with various style options
@@ -1415,6 +1386,20 @@ class MagicalTheme {
     }
     
     /**
+     * Adds multiple navigation items
+     * 
+     * @param array $items Navigation items to add
+     * @return MagicalTheme For method chaining
+     */
+    public function addNavItems(array $items) {
+        foreach ($items as $label => $item) {
+            $this->addNavItem($label, $item);
+        }
+        
+        return $this;
+    }
+    
+    /**
      * Get all navigation items
      * 
      * @return array The navigation items
@@ -1443,10 +1428,6 @@ class MagicalTheme {
         if (!empty($customNavItems)) {
             $this->setNavItems(array_merge($this->navItems, $customNavItems));
         }
-        
-        // Get username from session
-        $username = isset($_SESSION['username']) ? htmlspecialchars($_SESSION['username']) : 'User';
-        
         // Build the navigation HTML with Tailwind classes
         $html = '
         <!-- Magical Navbar -->
@@ -1490,7 +1471,7 @@ class MagicalTheme {
             
             if ($hasSubmenu) {
                 $html .= '
-                            <div class="relative group">
+                            <div class="relative dropdown-menu group">
                                 <a href="' . $item['url'] . '" class="relative flex items-center font-itim px-4 py-2 text-white/90 hover:text-white 
                                        hover:bg-white/10 rounded-lg transition-all duration-300' . ($isActive ? ' active' : '') . '">
                                     ' . $icon . $label . $badge . '
@@ -1499,8 +1480,9 @@ class MagicalTheme {
                                     </svg>
                                     ' . ($isActive ? '<span class="absolute bottom-1 left-1/2 -translate-x-1/2 w-5 h-1 bg-white rounded-full"></span>' : '') . '
                                 </a>
-                                <div class="hidden group-hover:block absolute left-0 mt-1 w-48 bg-white rounded-xl shadow-magical
-                                            border-t-2 border-primary py-2 z-50">';
+                                <div class="submenu opacity-0 invisible group-hover:opacity-100 group-hover:visible absolute left-0 mt-1 w-48 bg-white rounded-xl shadow-magical
+                                            border-t-2 border-primary py-2 z-50 transition-all duration-300"
+                                     style="transform: translateY(-10px); transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;">';
                                 
                 foreach ($item['submenu'] as $subLabel => $subItem) {
                     $subUrl = is_array($subItem) ? $subItem['url'] : $subItem;
@@ -1531,27 +1513,7 @@ class MagicalTheme {
         // User dropdown
         $html .= '
                         </div>
-                        <div class="relative ml-4 group" id="user-menu">
-                            <button class="flex items-center space-x-1 text-white px-3 py-2 rounded-lg hover:bg-white/10 focus:outline-none">
-                                <div class="w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                                    <span class="text-white">' . substr($username, 0, 1) . '</span>
-                                </div>
-                                <span class="font-itim">' . $username . '</span>
-                                <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                </svg>
-                            </button>
-                            <div class="hidden group-hover:block absolute right-0 mt-1 w-48 bg-white rounded-xl shadow-magical
-                                        border-t-2 border-primary py-2 z-50">
-                                <a href="profile.php" class="block px-4 py-2 font-itim text-dark hover:bg-primary/10 hover:text-primary rounded-lg mx-2">
-                                    <i class="fas fa-user-circle mr-2"></i> My Profile
-                                </a>
-                                <div class="border-t border-gray-100 my-1"></div>
-                                <a href="../controllers/logout.php" class="block px-4 py-2 font-itim text-dark hover:bg-danger/10 hover:text-danger rounded-lg mx-2">
-                                    <i class="fas fa-sign-out-alt mr-2"></i> Logout
-                                </a>
-                            </div>
-                        </div>
+                      
                     </div>
                 </div>
             </div>
@@ -1570,10 +1532,11 @@ class MagicalTheme {
             if ($hasSubmenu) {
                 $html .= '
                     <div class="block px-3 py-2 rounded-lg font-itim ' . 
-                       ($isActive ? 'bg-white/20 text-white' : 'text-white/80 hover:bg-white/10 hover:text-white') . '">
+                       ($isActive ? 'bg-white/20 text-white' : 'text-white/80 hover:bg-white/10 hover:text-white') . ' mobile-dropdown">
                         ' . $icon . $label . $badge . '
-                        <i class="fas fa-chevron-down ml-1 text-xs"></i>
-                    </div>';
+                        <i class="fas fa-chevron-down ml-1 text-xs mobile-dropdown-icon"></i>
+                    </div>
+                    <div class="pl-4 hidden mobile-submenu">';
                 
                 foreach ($item['submenu'] as $subLabel => $subItem) {
                     $subUrl = is_array($subItem) ? $subItem['url'] : $subItem;
@@ -1581,10 +1544,12 @@ class MagicalTheme {
                     $subBadge = is_array($subItem) && !empty($subItem['badge']) ? '<span class="float-right magic-badge bg-white/20 text-white text-xs py-0.5 px-2">' . $subItem['badge'] . '</span>' : '';
                     
                     $html .= '
-                        <a href="' . $subUrl . '" class="block px-3 py-2 pl-6 rounded-lg font-itim text-white/70 hover:bg-white/10 hover:text-white">
+                        <a href="' . $subUrl . '" class="block px-3 py-2 rounded-lg font-itim text-white/70 hover:bg-white/10 hover:text-white">
                             ' . $subIcon . $subLabel . $subBadge . '
                         </a>';
                 }
+                
+                $html .= '</div>';
             } else {
                 $html .= '
                     <a href="' . $item['url'] . '" class="block px-3 py-2 rounded-lg font-itim ' . 
@@ -1609,6 +1574,33 @@ class MagicalTheme {
         <!-- Spacer for fixed navbar -->
         <div class="h-16"></div>
         
+        <style>
+        /* Dropdown menu hover animations */
+        .dropdown-menu .submenu {
+            pointer-events: none;
+            transform: translateY(-20px);
+            transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
+        }
+        
+        .dropdown-menu:hover .submenu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        
+        /* Add a dropdown triangle indicator */
+        .dropdown-menu .submenu::before {
+            content: "";
+            position: absolute;
+            top: -8px;
+            left: 20px;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid ' . $this->colors['primary'] . ';
+        }
+        </style>
+        
         <script>
             // Mobile menu toggle
             document.addEventListener("DOMContentLoaded", function() {
@@ -1621,24 +1613,26 @@ class MagicalTheme {
                     });
                 }
                 
-                // Add mobile submenu toggle functionality
-                const mobileSubmenus = document.querySelectorAll("#mobile-menu .fas.fa-chevron-down");
-                mobileSubmenus.forEach(function(submenu) {
-                    submenu.parentElement.addEventListener("click", function(e) {
-                        if (e.target === submenu || e.target === submenu.parentElement) {
-                            const nextElement = this.nextElementSibling;
-                            if (nextElement && nextElement.classList.contains("block")) {
-                                nextElement.classList.add("hidden");
-                                nextElement.classList.remove("block");
-                                submenu.classList.remove("fa-chevron-up");
-                                submenu.classList.add("fa-chevron-down");
-                            } else if (nextElement) {
-                                nextElement.classList.remove("hidden");
-                                nextElement.classList.add("block");
-                                submenu.classList.remove("fa-chevron-down");
-                                submenu.classList.add("fa-chevron-up");
+                // Mobile dropdown toggles
+                const mobileDropdowns = document.querySelectorAll(".mobile-dropdown");
+                mobileDropdowns.forEach(dropdown => {
+                    dropdown.addEventListener("click", function() {
+                        const submenu = this.nextElementSibling;
+                        const icon = this.querySelector(".mobile-dropdown-icon");
+                        
+                        if (submenu && submenu.classList.contains("mobile-submenu")) {
+                            submenu.classList.toggle("hidden");
+                            
+                            // Toggle icon rotation
+                            if (icon) {
+                                if (submenu.classList.contains("hidden")) {
+                                    icon.classList.remove("fa-chevron-up");
+                                    icon.classList.add("fa-chevron-down");
+                                } else {
+                                    icon.classList.remove("fa-chevron-down");
+                                    icon.classList.add("fa-chevron-up");
+                                }
                             }
-                            e.preventDefault();
                         }
                     });
                 });
@@ -2290,11 +2284,35 @@ class MagicalTheme {
                         closePopup("' . $popupId . '");
                     }, ' . $showtime . ');
                 }
-            }, ' . $afterTime . '); 
-        })(); 
+            }, ' . $afterTime . ');
+        })();
         </script>';
-         
+        
         // Return empty string as the actual output has been echoed directly
         return '';
+    }
+
+    public function renderUserNav($username){
+        echo '  <div class="relative ml-4 group" id="user-menu">
+                            <button class="flex items-center space-x-1 text-white px-3 py-2 rounded-lg hover:bg-white/10 focus:outline-none">
+                                <div class="w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                                    <span class="text-white">' . substr($username, 0, 1) . '</span>
+                                </div>
+                                <span class="font-itim">' . $username . '</span>
+                                <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div class="hidden group-hover:block absolute right-0 mt-1 w-48 bg-white rounded-xl shadow-magical
+                                        border-t-2 border-primary py-2 z-50">
+                                <a href="profile.php" class="block px-4 py-2 font-itim text-dark hover:bg-primary/10 hover:text-primary rounded-lg mx-2">
+                                    <i class="fas fa-user-circle mr-2"></i> My Profile
+                                </a>
+                                <div class="border-t border-gray-100 my-1"></div>
+                                <a href="../controllers/logout.php" class="block px-4 py-2 font-itim text-dark hover:bg-danger/10 hover:text-danger rounded-lg mx-2">
+                                    <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                                </a>
+                            </div>
+                        </div>';
     }
 }
