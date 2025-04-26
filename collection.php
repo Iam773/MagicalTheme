@@ -1,42 +1,13 @@
 <?php
 require_once 'MagicalTheme.php';
 
+include 'includes/nav.php';
+
 // Initialize the theme with blue color scheme
 $theme = new MagicalTheme('blue');
 
-// Set custom navigation items for a card game
-$navItems = [
-    'Home' => [
-        'url' => 'index.php',
-        'icon' => 'fa-home'
-    ],
-    'Card Collection' => [
-        'url' => 'collection.php',
-        'icon' => 'fa-layer-group',
-        'active' => true,
-        'badge' => '42'
-    ],
-    'Battle Arena' => [
-        'url' => 'battle.php',
-        'icon' => 'fa-swords',
-        'submenu' => [
-            'PvP Matches' => 'pvp.php',
-            'Tournament' => 'tournament.php',
-            'Practice Mode' => 'practice.php'
-        ]
-    ],
-    'Shop' => [
-        'url' => 'shop.php',
-        'icon' => 'fa-store',
-        'badge' => '<span class="bg-warning/90 text-dark text-xs py-0.5 px-2 rounded-full font-bold">New</span>'
-    ],
-    'Leaderboard' => 'leaderboard.php',
-    'Profile' => [
-        'url' => 'profile.php',
-        'icon' => 'fa-user'
-    ]
-];
-$theme->setNavItems($navItems);
+
+include_once 'includes/navbar.php';
 
 // Sample card data with expanded collection
 $cards = [
@@ -252,7 +223,7 @@ $cards = [
 <body class="bg-light">
     <?php 
     // Include the navigation file
-    include 'includes/nav.php'; 
+    renderNavbar();
     ?>
     
     <div class="container mx-auto px-4 py-6">

@@ -56,36 +56,7 @@ class MagicalTheme {
     private $currentTheme = 'pink';
     
     // Default navigation items
-    private $navItems = [
-        'Dashboard' => [
-            'url' => 'dashboard.php',
-            'icon' => 'fa-dashboard',
-            'active' => false,
-            'badge' => null,
-            'submenu' => []
-        ],
-        // 'Attendance' => [
-        //     'url' => 'attendance.php',
-        //     'icon' => 'fa-calendar-check',
-        //     'active' => false,
-        //     'badge' => null,
-        //     'submenu' => []
-        // ],
-        // 'Leaves' => [
-        //     'url' => 'leaves.php',
-        //     'icon' => 'fa-calendar-xmark',
-        //     'active' => false,
-        //     'badge' => null,
-        //     'submenu' => []
-        // ],
-        // 'Reports' => [
-        //     'url' => 'reports.php',
-        //     'icon' => 'fa-chart-line',
-        //     'active' => false,
-        //     'badge' => null,
-        //     'submenu' => []
-        // ]
-    ];
+    public $navItems = [];
     
     /**
      * Renders a magical-themed button with various style options
@@ -1409,6 +1380,20 @@ class MagicalTheme {
                 'badge' => $item['badge'] ?? null,
                 'submenu' => $item['submenu'] ?? []
             ];
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * Adds multiple navigation items
+     * 
+     * @param array $items Navigation items to add
+     * @return MagicalTheme For method chaining
+     */
+    public function addNavItems(array $items) {
+        foreach ($items as $label => $item) {
+            $this->addNavItem($label, $item);
         }
         
         return $this;
