@@ -1,43 +1,14 @@
 <?php
 require_once 'MagicalTheme.php';
 
+// Include the navigation file early, before any output is sent
+include 'includes/nav.php';
+
 // Initialize the theme with blue color scheme
 $theme = new MagicalTheme('blue');
 
-// Set custom navigation items for a card game
-$navItems = [
-    'Home' => [
-        'url' => 'index.php',
-        'icon' => 'fa-home',
-        'active' => true
-    ],
-    'Card Collection' => [
-        'url' => 'collection.php',
-        'icon' => 'fa-layer-group',
-        'badge' => '42'
-    ],
-    'Battle Arena' => [
-        'url' => 'battle.php',
-        'icon' => 'fa-swords',
-        'submenu' => [
-            'PvP Matches' => 'pvp.php',
-            'Tournament' => 'tournament.php',
-            'Practice Mode' => 'practice.php'
-        ]
-    ],
-    'Shop' => [
-        'url' => 'shop.php',
-        'icon' => 'fa-store',
-        'badge' => '<span class="bg-warning/90 text-dark text-xs py-0.5 px-2 rounded-full font-bold">New</span>'
-    ],
-    'Leaderboard' => 'leaderboard.php',
-    'Profile' => [
-        'url' => 'profile.php',
-        'icon' => 'fa-user'
-    ]
-];
-$theme->setNavItems($navItems);
-
+// Add additional navigation items as needed
+include_once 'includes/navbar.php';
 // Sample card data for our game
 $cards = [
     [
@@ -90,11 +61,10 @@ $cards = [
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="bg-light">
+
     <?php 
-    // Include the navigation file
-    include 'includes/nav.php'; 
+    renderNavbar(); // Call the function to render the navbar
     ?>
-    
     <div class="container mx-auto px-4 py-6">
         <!-- Game Banner -->
         <div class="game-banner shadow-magical mb-10">

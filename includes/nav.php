@@ -1,61 +1,27 @@
 <?php
 // This file contains the navigation bar that can be included in multiple pages
 
+// Ensure no output has been sent before starting the session
+if (session_status() == PHP_SESSION_NONE && !headers_sent()) {
+    session_start();
+} 
+
 // Check if $theme is set, otherwise create it
 if (!isset($theme) || !($theme instanceof MagicalTheme)) {
     require_once __DIR__ . '/../MagicalTheme.php';
     $theme = new MagicalTheme('blue');
 }
-
-// Check if $navItems is not set, initialize with default nav structure
-if (!isset($navItems)) {
-    $navItems = [
-        'Home' => [
-            'url' => 'index.php',
-            'icon' => 'fa-home'
-        ],
-        'Card Collection' => [
-            'url' => 'collection.php',
-            'icon' => 'fa-layer-group',
-            'badge' => '42'
-        ],
-        'Battle Arena' => [
-            'url' => 'battle.php',
-            'icon' => 'fa-swords',
-            'submenu' => [
-                'PvP Matches' => 'pvp.php',
-                'Tournament' => 'tournament.php',
-                'Practice Mode' => 'practice.php'
-            ]
-        ],
-        'Shop' => [
-            'url' => 'shop.php',
-            'icon' => 'fa-store',
-            'badge' => '<span class="bg-warning/90 text-dark text-xs py-0.5 px-2 rounded-full font-bold">New</span>'
-        ],
-        'Leaderboard' => 'leaderboard.php',
-        'Profile' => [
-            'url' => 'profile.php',
-            'icon' => 'fa-user'
-        ]
-    ];
-    
-    // Set active page based on current file
-    $currentFile = basename($_SERVER['PHP_SELF']);
-    foreach ($navItems as $label => $item) {
-        if (is_array($item) && isset($item['url']) && basename($item['url']) === $currentFile) {
-            $navItems[$label]['active'] = true;
-        }
-    }
-    
-    $theme->setNavItems($navItems);
-}
-
 // Set website name if not provided
 if (!isset($websiteName)) {
     $websiteName = 'Azure Cards';
 }
 
-// Render the navigation bar
-echo $theme->renderNavbar(basename($_SERVER['PHP_SELF']), [], $websiteName);
+// IMPORTANT CHANGE: Don't render the navbar here!
+// Instead, provide a function that can be called after potential item additions
+function renderNavbar() {
+    global $theme, $websiteName;
+    echo $theme->renderNavbar(basename($_SERVER['PHP_SELF']), [], $websiteName);
+}
+
+
 ?>
