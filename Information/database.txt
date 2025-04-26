@@ -17,6 +17,9 @@ DATABASE SCHEMA:
    - id (INT, Primary Key, Auto Increment)
    - name (VARCHAR(100))
    - type (ENUM('creature', 'spell', 'trap'))
+   - element (ENUM('Water', 'Fire', 'Earth', 'Air', 'Arcane')) // Card element
+   - rarity (ENUM('Common', 'Uncommon', 'Rare', 'Epic', 'Legendary')) // Card rarity
+   - mana_cost (TINYINT, CHECK(mana_cost BETWEEN 0 AND 10)) // Mana cost (0-10)
    - attack (INT, Nullable) // For creature cards
    - defense (INT, Nullable) // For creature cards
    - effect (TEXT, Nullable) // Description of the card's effect
