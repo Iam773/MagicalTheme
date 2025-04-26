@@ -41,8 +41,7 @@ DATABASE SCHEMA:
 
 5. **matches**: Stores match information.
    - id (INT, Primary Key, Auto Increment)
-   - player1_id (INT, Foreign Key -> users.id)
-   - player2_id (INT, Foreign Key -> users.id)
+   - player_ids (JSON) // Stores an array of player IDs (2-4 players)
    - winner_id (INT, Foreign Key -> users.id, Nullable)
    - created_at (DATETIME)
    - updated_at (DATETIME)
