@@ -1,0 +1,51 @@
+=======================================================================
+DATABASE DESIGN
+=======================================================================
+
+DATABASE SCHEMA:
+----------------
+
+1. **users**: Stores user information.
+   - id (INT, Primary Key, Auto Increment)
+   - username (VARCHAR(50), Unique)
+   - password (VARCHAR(255))
+   - email (VARCHAR(100), Unique)
+   - created_at (DATETIME)
+   - updated_at (DATETIME)
+
+2. **cards**: Stores card information.
+   - id (INT, Primary Key, Auto Increment)
+   - name (VARCHAR(100))
+   - type (ENUM('creature', 'spell', 'trap'))
+   - attack (INT, Nullable) // For creature cards
+   - defense (INT, Nullable) // For creature cards
+   - effect (TEXT, Nullable) // Description of the card's effect
+   - created_at (DATETIME)
+   - updated_at (DATETIME)
+
+3. **decks**: Stores user decks.
+   - id (INT, Primary Key, Auto Increment)
+   - user_id (INT, Foreign Key -> users.id)
+   - name (VARCHAR(100)) // Deck name
+   - created_at (DATETIME)
+   - updated_at (DATETIME)
+
+4. **deck_cards**: Stores the cards in each deck.
+   - id (INT, Primary Key, Auto Increment)
+   - deck_id (INT, Foreign Key -> decks.id)
+   - card_id (INT, Foreign Key -> cards.id)
+   - quantity (INT) // Number of copies of the card in the deck
+
+5. **matches**: Stores match information.
+   - id (INT, Primary Key, Auto Increment)
+   - player1_id (INT, Foreign Key -> users.id)
+   - player2_id (INT, Foreign Key -> users.id)
+   - winner_id (INT, Foreign Key -> users.id, Nullable)
+   - created_at (DATETIME)
+   - updated_at (DATETIME)
+
+6. **match_logs**: Stores actions taken during a match.
+   - id (INT, Primary Key, Auto Increment)
+   - match_id (INT, Foreign Key -> matches.id)
+   - action (TEXT) // Description of the action
+   - created_at (DATETIME)
