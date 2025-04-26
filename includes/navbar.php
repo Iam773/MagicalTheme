@@ -25,4 +25,6 @@ $theme->addNavItem('Shop', [
 ]);
 
 $theme->addNavItem('Leaderboard', 'leaderboard.php');
+
+// var_dump( $_SESSION['user']);
 ?>
