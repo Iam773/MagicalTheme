@@ -52,7 +52,7 @@ $cards = [
         'mana' => 2,
         'rarity' => 'common',
         'image' => 'https://placehold.co/150x150/bae6fd/000000?text=Shield',
-        'type' => 'equipment',
+        'type' => 'trap',
         'element' => 'water',
         'description' => 'Provides an icy barrier against attacks.'
     ],
@@ -98,7 +98,7 @@ $cards = [
         'mana' => 2,
         'rarity' => 'common',
         'image' => 'https://placehold.co/150x150/f97316/ffffff?text=Dagger',
-        'type' => 'equipment',
+        'type' => 'trap',
         'element' => 'fire',
         'description' => 'A dagger forged in eternal flame.'
     ],
@@ -133,7 +133,7 @@ $cards = [
         'mana' => 3,
         'rarity' => 'uncommon',
         'image' => 'https://placehold.co/150x150/a3e635/000000?text=Armor',
-        'type' => 'equipment',
+        'type' => 'trap',
         'element' => 'earth',
         'description' => 'Protective armor carved from enchanted stone.'
     ],
@@ -168,7 +168,7 @@ $cards = [
         'mana' => 1,
         'rarity' => 'common',
         'image' => 'https://placehold.co/150x150/bae6fd/000000?text=Cloak',
-        'type' => 'equipment',
+        'type' => 'trap',
         'element' => 'air',
         'description' => 'Grants swiftness and agility to the wearer.'
     ],
@@ -203,7 +203,7 @@ $cards = [
         'mana' => 3,
         'rarity' => 'rare',
         'image' => 'https://placehold.co/150x150/c4b5fd/000000?text=Staff',
-        'type' => 'equipment',
+        'type' => 'trap',
         'element' => 'arcane',
         'description' => 'Ancient staff that amplifies magical abilities.'
     ],
@@ -311,8 +311,8 @@ $cards = [
                                     <label for="type-spell" class="ml-2 text-sm text-gray-700">Spell</label>
                                 </div>
                                 <div class="flex items-center">
-                                    <input type="checkbox" id="type-equipment" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
-                                    <label for="type-equipment" class="ml-2 text-sm text-gray-700">Equipment</label>
+                                    <input type="checkbox" id="type-trap" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                                    <label for="type-trap" class="ml-2 text-sm text-gray-700">Trap</label>
                                 </div>
                             </div>
                         </div>
