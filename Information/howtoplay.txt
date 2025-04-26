@@ -1,0 +1,61 @@
+=======================================================================
+คำแนะนำการเล่นเกม
+=======================================================================
+
+เป้าหมายของเกม:
+---------------
+สร้างเด็คที่แข็งแกร่งและเอาชนะคู่ต่อสู้โดยลดคะแนนชีวิตของพวกเขาให้เหลือศูนย์
+
+วิธีการเล่น:
+------------
+1. **การเริ่มต้น**:
+   - ผู้เล่นแต่ละคนมีเด็ค 40 ใบ
+   - สับเด็คและจั่วไพ่ 5 ใบเพื่อเริ่มต้น
+   - ผู้เล่นแต่ละคนเริ่มต้นด้วยคะแนนชีวิต 20 คะแนน
+
+2. **ลำดับการเล่นในแต่ละเทิร์น**:
+   - **จั่วไพ่**(Draw Phase): จั่วไพ่ 1 ใบจากเด็ค
+   - **เล่นไพ่**(Main Phase): ใช้ไพ่จากมือ เช่น การ์ดสิ่งมีชีวิต คาถา หรือกับดัก
+   - **ต่อสู้**(Battle Phase): โจมตีสิ่งมีชีวิตของคู่ต่อสู้หรือโจมตีคะแนนชีวิตของพวกเขาโดยตรง
+   - **จบเทิร์น**(End Phase): แก้ไขผลของไพ่และส่งเทิร์นให้คู่ต่อสู้
+   
+3. **ประเภทของการ์ด**:
+   - **การ์ดสิ่งมีชีวิต**(Creature Cards): ใช้โจมตีหรือป้องกัน มีคะแนนโจมตีและป้องกัน
+   - **การ์ดคาถา**(Spell Cards): ใช้เพื่อเพิ่มพลังหรือฟื้นฟูคะแนนชีวิต
+   - **การ์ดกับดัก**(Trap Cards): ซ่อนอยู่และเปิดใช้งานเมื่อเงื่อนไขตรงกัน
+
+4. **วิธีชนะ**:
+   - ลดคะแนนชีวิตของคู่ต่อสู้ให้เหลือศูนย์
+   - หากผู้เล่นไม่สามารถจั่วไพ่ได้ในช่วงจั่วไพ่ พวกเขาจะแพ้เกม
+
+EXAMPLE CODE SNIPPET:
+---------------------
+```html
+<div id="game-container" class="relative w-full h-screen bg-gray-800">
+    <div id="player-hand" class="absolute bottom-0 w-full flex justify-center space-x-4">
+        <div class="card bg-blue-500 text-white p-4 rounded">Card 1</div>
+        <div class="card bg-blue-500 text-white p-4 rounded">Card 2</div>
+        <div class="card bg-blue-500 text-white p-4 rounded">Card 3</div>
+    </div>
+    <div id="opponent-hand" class="absolute top-0 w-full flex justify-center space-x-4">
+        <div class="card bg-red-500 text-white p-4 rounded">Card A</div>
+        <div class="card bg-red-500 text-white p-4 rounded">Card B</div>
+        <div class="card bg-red-500 text-white p-4 rounded">Card C</div>
+    </div>
+</div>
+
+<script>
+    let playerLife = 20;
+    let opponentLife = 20;
+
+    function playCard(card) {
+        console.log(`Playing card: ${card}`);
+        // Logic for playing a card
+    }
+
+    function attack(target) {
+        console.log(`Attacking: ${target}`);
+        // Logic for attacking
+    }
+</script>
+```
