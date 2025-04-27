@@ -1,6 +1,10 @@
 <?php
 require_once '../MagicalTheme.php';
 
+
+include '../includes/nav.php';
+
+
 // Initialize the theme with blue color scheme
 $theme = new MagicalTheme('blue');
 
@@ -72,8 +76,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body class="bg-light">
     <?php 
+    renderNavbar();
     $websiteName = 'Azure Cards';
-    include '../includes/nav.php'; 
     ?>
     
     <div class="container mx-auto px-4 py-10 min-h-screen">
