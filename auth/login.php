@@ -131,7 +131,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     
                     <div class="mb-6">
                         <button type="submit" class="w-full magic-button magic-button-primary py-2 px-4 rounded-md">
+                        <a href="../index.php">
                             <i class="fas fa-sign-in-alt mr-2"></i> Sign In
+                        </a>
                         </button>
                     </div>
                     
