@@ -105,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <p class="text-gray-600">Join the magical world of Azure Cards</p>
                     </div>
                     
-                    <form method="POST" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
+                    <form method="POST" action="../api/action/register.php">
                         <div class="mb-4">
                             <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
                             <div class="relative">
