@@ -73,6 +73,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php echo $theme->render(); ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* Magical required field styles */
+        .required-field::after {
+            content: "✨";
+            margin-left: 5px;
+            color: var(--primary);
+            animation: sparkle 1.5s infinite;
+            opacity: 0.8;
+            font-size: 0.8em;
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.5; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2) rotate(10deg); }
+        }
+        
+        .magic-input:required:invalid:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.3), 0 0 10px rgba(var(--primary-rgb), 0.2);
+            background-image: linear-gradient(to right, rgba(var(--primary-rgb), 0.05), transparent);
+        }
+    </style>
 </head>
 <body class="bg-light">
     <?php 
@@ -107,14 +129,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     
                     <form method="POST" action="../api/action/register.php">
                         <div class="mb-4">
-                            <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                            <label for="username" class="block text-sm font-medium text-gray-700 mb-1 required-field">Username</label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <i class="fas fa-user text-gray-400"></i>
                                 </div>
                                 <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($username); ?>" 
                                        class="magic-input pl-10 block w-full rounded-md focus:ring-primary focus:border-primary"
-                                       placeholder="Choose a username">
+                                       placeholder="Choose a username" required>
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none opacity-50">
+                                    <i class="fas fa-magic text-primary hidden magic-required-icon"></i>
+                                </div>
                             </div>
                             <?php if (!empty($errors['username'])): ?>
                                 <p class="mt-1 text-sm text-danger"><?php echo $errors['username']; ?></p>
@@ -122,14 +147,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                         
                         <div class="mb-4">
-                            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-1 required-field">Email Address</label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <i class="fas fa-envelope text-gray-400"></i>
                                 </div>
                                 <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" 
                                        class="magic-input pl-10 block w-full rounded-md focus:ring-primary focus:border-primary"
-                                       placeholder="you@example.com">
+                                       placeholder="you@example.com" required>
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none opacity-50">
+                                    <i class="fas fa-magic text-primary hidden magic-required-icon"></i>
+                                </div>
                             </div>
                             <?php if (!empty($errors['email'])): ?>
                                 <p class="mt-1 text-sm text-danger"><?php echo $errors['email']; ?></p>
@@ -137,14 +165,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                         
                         <div class="mb-4">
-                            <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                            <label for="password" class="block text-sm font-medium text-gray-700 mb-1 required-field">Password</label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <i class="fas fa-lock text-gray-400"></i>
                                 </div>
                                 <input type="password" id="password" name="password" 
                                        class="magic-input pl-10 block w-full rounded-md focus:ring-primary focus:border-primary"
-                                       placeholder="Create a password">
+                                       placeholder="Create a password" required>
                                 <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
                                     <i class="fas fa-eye text-gray-400 cursor-pointer toggle-password"></i>
                                 </div>
@@ -157,14 +185,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                         
                         <div class="mb-6">
-                            <label for="confirm_password" class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+                            <label for="confirm_password" class="block text-sm font-medium text-gray-700 mb-1 required-field">Confirm Password</label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <i class="fas fa-lock text-gray-400"></i>
                                 </div>
                                 <input type="password" id="confirm_password" name="confirm_password" 
                                        class="magic-input pl-10 block w-full rounded-md focus:ring-primary focus:border-primary"
-                                       placeholder="Confirm your password">
+                                       placeholder="Confirm your password" required>
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none opacity-50">
+                                    <i class="fas fa-magic text-primary hidden magic-required-icon"></i>
+                                </div>
                             </div>
                             <?php if (!empty($errors['confirm_password'])): ?>
                                 <p class="mt-1 text-sm text-danger"><?php echo $errors['confirm_password']; ?></p>
@@ -175,10 +206,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="flex items-start">
                                 <div class="flex items-center h-5">
                                     <input type="checkbox" id="agree_terms" name="agree_terms" 
-                                           class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                                           class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded" required>
                                 </div>
                                 <div class="ml-3 text-sm">
-                                    <label for="agree_terms" class="text-gray-700">
+                                    <label for="agree_terms" class="text-gray-700 required-field">
                                         I agree to the <a href="#" class="text-primary">Terms of Service</a> and 
                                         <a href="#" class="text-primary">Privacy Policy</a>
                                     </label>
@@ -252,11 +283,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </footer>
     
     <script src="../js/game.js"></script>
+    <script src="../assets/js/MagicalUI.js"></script>
     <script>
         // Password visibility toggle
         document.addEventListener('DOMContentLoaded', function() {
+            // Example 1: Basic usage with default path
+            MagicalUI.setThemeColorsFromPHP('../get-theme-colors.php')
+                .then(colors => {
+                    console.log('Theme colors loaded successfully:', colors);
+                    // Now the UI will automatically update with these colors
+                })
+                .catch(error => {
+                    console.error('Error loading theme colors:', error);
+                });
+                
+            // Example 2: Specify custom path to the get-theme-colors.php file
+            // MagicalUI.setThemeColorsFromPHP('../get-theme-colors.php')
+            //     .then(colors => {
+            //         console.log('Theme colors loaded from custom path:', colors);
+            //     })
+            //     .catch(error => {
+            //         console.error('Error loading theme colors:', error);
+            //     });
+                
+            // Example 3: Explicitly disable using color script (data attribute)
+            // MagicalUI.setThemeColorsFromPHP(false, '../get-theme-colors.php')
+            //     .then(colors => {
+            //         console.log('Theme colors loaded with options:', colors);
+            //     })
+            //     .catch(error => {
+            //         console.error('Error loading theme colors:', error);
+            //     });
+            
+            // You can also manually update colors after other operations
+            // MagicalUI.setThemeColors({
+            //     primary: '#ff00ff',
+            //     secondary: '#00ffff'
+            // });
+            
             const togglePassword = document.querySelector('.toggle-password');
             const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirm_password');
             
             if (togglePassword) {
                 togglePassword.addEventListener('click', function() {
@@ -269,6 +336,105 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     this.classList.toggle('fa-eye-slash');
                 });
             }
+            
+            // Show magical icon when required field is empty
+            const requiredInputs = document.querySelectorAll('input[required]');
+            
+            requiredInputs.forEach(input => {
+                if(input.type === 'checkbox') return; // Skip checkboxes
+                const magicIcon = input.parentNode.querySelector('.magic-required-icon');
+                if(!magicIcon) return;
+                
+                // Check validity on blur
+                input.addEventListener('blur', function() {
+                    if (!this.validity.valid) {
+                        magicIcon.classList.remove('hidden');
+                        magicIcon.classList.add('animate-ping-slow');
+                    } else {
+                        magicIcon.classList.add('hidden');
+                        magicIcon.classList.remove('animate-ping-slow');
+                    }
+                });
+                
+                // Check validity on input
+                input.addEventListener('input', function() {
+                    if (this.validity.valid) {
+                        magicIcon.classList.add('hidden');
+                        magicIcon.classList.remove('animate-ping-slow');
+                    }
+                });
+            });
+            
+            // Password matching validation
+            const form = document.querySelector('form');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    const password = document.getElementById('password').value;
+                    const confirmPassword = document.getElementById('confirm_password').value;
+                    
+                    if (password !== confirmPassword) {
+                        e.preventDefault(); // Prevent form submission
+                        
+                        // Example 1: Basic usage with type and message
+                        MagicalUI.renderPopup(
+                            "Passwords do not match. Please make sure both passwords are the same.", 
+                            "error"
+                        );
+                        
+                        // Example 2: With custom title and button text
+                        // MagicalUI.renderPopup(
+                        //     "Passwords do not match. Please make sure both passwords are the same.", 
+                        //     "error", 
+                        //     {
+                        //         title: "Password Mismatch",
+                        //         confirmText: "Try Again"
+                        //     }
+                        // );
+                        
+                        // Example 3: With callback function when confirmed
+                        // MagicalUI.renderPopup(
+                        //     "Passwords do not match. Please make sure both passwords are the same.", 
+                        //     "error", 
+                        //     {
+                        //         title: "Password Mismatch",
+                        //         confirmText: "I'll Fix It",
+                        //         onConfirm: function() {
+                        //             document.getElementById('confirm_password').focus();
+                        //         }
+                        //     }
+                        // );
+                        
+                        // Example 4: With auto-close timing options
+                        // MagicalUI.renderPopup(
+                        //     "Passwords do not match. Please make sure both passwords are the same.", 
+                        //     "error", 
+                        //     {
+                        //         afterTime: 500,  // Delay showing by 500ms
+                        //         showTime: 5000,  // Auto-close after 5 seconds
+                        //         title: "Password Error"
+                        //     }
+                        // );
+                        
+                        // Focus on confirm password field
+                        document.getElementById('confirm_password').focus();
+                    }
+                });
+            }
+            
+            // Helper function to create alert container if it doesn't exist
+            function createAlertContainer() {
+                const container = document.createElement('div');
+                container.id = 'alert-container';
+                container.className = 'container mx-auto px-4 max-w-lg mb-4';
+                
+                // Insert at the beginning of the form
+                const formElement = document.querySelector('form');
+                formElement.parentNode.insertBefore(container, formElement);
+                
+                return container;
+            }
+            
+          
         });
     </script>
 </body>
