@@ -1,6 +1,8 @@
 <?php
 require_once '../MagicalTheme.php';
 
+include '../includes/nav.php';
+
 // Initialize the theme with blue color scheme
 $theme = new MagicalTheme('blue');
 
@@ -70,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body class="bg-light">
     <?php 
     $websiteName = 'Azure Cards';
-    include '../includes/nav.php'; 
+    renderNavbar();
     ?>
     
     <div class="container mx-auto px-4 py-10 min-h-screen">
@@ -87,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 <?php endif; ?>
                 
-                <form method="POST" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
+                <form method="POST" action="../api/action/login.php">
                     <div class="mb-4">
                         <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
                         <div class="relative">
