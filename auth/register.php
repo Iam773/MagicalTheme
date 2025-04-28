@@ -13,6 +13,7 @@ $username = '';
 $email = '';
 $errors = [];
 $success = false;
+$errorMessage = '';
 
 // Check if form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -46,6 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     if ($password !== $confirm_password) {
         $errors['confirm_password'] = 'Passwords do not match';
+        $errorMessage = 'Passwords do not match. Please try again.';
     }
     
     if (!$agree_terms) {
@@ -61,6 +63,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Clear form data
         $username = '';
         $email = '';
+        
+        // Redirect to login page
+        header('Location: login.php');
+        exit;
     }
 }
 ?>
@@ -78,6 +84,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php 
     renderNavbar();
     $websiteName = 'Azure Cards';
+    
+    // Show popup if passwords do not match
+    if (!empty($errors['confirm_password'])) {
+        echo $theme->renderPopup($errorMessage, 'error', 300, 5000);
+    }
     ?>
     
     <div class="container mx-auto px-4 py-10 min-h-screen">
@@ -107,14 +118,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     
                     <form method="POST" action="../api/action/register.php">
                         <div class="mb-4">
-                            <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                            <label for="username" class="block text-sm font-medium text-gray-700 mb-1 required-field">Username</label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <i class="fas fa-user text-gray-400"></i>
                                 </div>
                                 <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($username); ?>" 
                                        class="magic-input pl-10 block w-full rounded-md focus:ring-primary focus:border-primary"
-                                       placeholder="Choose a username">
+                                       placeholder="Choose a username" required>
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none opacity-50">
+                                    <i class="fas fa-magic text-primary hidden magic-required-icon"></i>
+                                </div>
                             </div>
                             <?php if (!empty($errors['username'])): ?>
                                 <p class="mt-1 text-sm text-danger"><?php echo $errors['username']; ?></p>
@@ -122,14 +136,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                         
                         <div class="mb-4">
-                            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-1 required-field">Email Address</label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <i class="fas fa-envelope text-gray-400"></i>
                                 </div>
                                 <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" 
                                        class="magic-input pl-10 block w-full rounded-md focus:ring-primary focus:border-primary"
-                                       placeholder="you@example.com">
+                                       placeholder="you@example.com" required>
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none opacity-50">
+                                    <i class="fas fa-magic text-primary hidden magic-required-icon"></i>
+                                </div>
                             </div>
                             <?php if (!empty($errors['email'])): ?>
                                 <p class="mt-1 text-sm text-danger"><?php echo $errors['email']; ?></p>
@@ -137,16 +154,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                         
                         <div class="mb-4">
-                            <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                            <label for="password" class="block text-sm font-medium text-gray-700 mb-1 required-field">Password</label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <i class="fas fa-lock text-gray-400"></i>
                                 </div>
                                 <input type="password" id="password" name="password" 
                                        class="magic-input pl-10 block w-full rounded-md focus:ring-primary focus:border-primary"
-                                       placeholder="Create a password">
-                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
-                                    <i class="fas fa-eye text-gray-400 cursor-pointer toggle-password"></i>
+                                       placeholder="Create a password" required>
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none opacity-50">
+                                    <i class="fas fa-magic text-primary hidden magic-required-icon"></i>
                                 </div>
                             </div>
                             <?php if (!empty($errors['password'])): ?>
@@ -157,14 +174,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                         
                         <div class="mb-6">
-                            <label for="confirm_password" class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+                            <label for="confirm_password" class="block text-sm font-medium text-gray-700 mb-1 required-field">Confirm Password</label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <i class="fas fa-lock text-gray-400"></i>
                                 </div>
                                 <input type="password" id="confirm_password" name="confirm_password" 
                                        class="magic-input pl-10 block w-full rounded-md focus:ring-primary focus:border-primary"
-                                       placeholder="Confirm your password">
+                                       placeholder="Confirm your password" required>
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none opacity-50">
+                                    <i class="fas fa-magic text-primary hidden magic-required-icon"></i>
+                                </div>
                             </div>
                             <?php if (!empty($errors['confirm_password'])): ?>
                                 <p class="mt-1 text-sm text-danger"><?php echo $errors['confirm_password']; ?></p>
@@ -175,10 +195,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="flex items-start">
                                 <div class="flex items-center h-5">
                                     <input type="checkbox" id="agree_terms" name="agree_terms" 
-                                           class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                                           class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded" required>
                                 </div>
                                 <div class="ml-3 text-sm">
-                                    <label for="agree_terms" class="text-gray-700">
+                                    <label for="agree_terms" class="text-gray-700 required-field">
                                         I agree to the <a href="#" class="text-primary">Terms of Service</a> and 
                                         <a href="#" class="text-primary">Privacy Policy</a>
                                     </label>
