@@ -13,6 +13,7 @@ $username = '';
 $email = '';
 $errors = [];
 $success = false;
+$errorMessage = '';
 
 // Check if form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -46,6 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     if ($password !== $confirm_password) {
         $errors['confirm_password'] = 'Passwords do not match';
+        $errorMessage = 'Passwords do not match. Please try again.';
     }
     
     if (!$agree_terms) {
@@ -61,6 +63,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Clear form data
         $username = '';
         $email = '';
+        
+        // Redirect to login page
+        header('Location: login.php');
+        exit;
     }
 }
 ?>
@@ -100,6 +106,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php 
     renderNavbar();
     $websiteName = 'Azure Cards';
+    
+    // Show popup if passwords do not match
+    if (!empty($errors['confirm_password'])) {
+        echo $theme->renderPopup($errorMessage, 'error', 300, 5000);
+    }
     ?>
     
     <div class="container mx-auto px-4 py-10 min-h-screen">
@@ -172,7 +183,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </div>
                                 <input type="password" id="password" name="password" 
                                        class="magic-input pl-10 block w-full rounded-md focus:ring-primary focus:border-primary"
-                                       placeholder="Create a password" required>
+                                       placeholder="Create a password">
                                 <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
                                     <i class="fas fa-eye text-gray-400 cursor-pointer toggle-password"></i>
                                 </div>
