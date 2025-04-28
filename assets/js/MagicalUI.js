@@ -461,18 +461,24 @@
      * @param {string} message Message to display
      * @param {string} type Popup type (success, error, warning, info)
      * @param {Object} options Additional options
-     * @returns {string} The ID of the created popup
+     * @param {number} [options.afterTime=0] Delay in ms before showing the popup
+     * @param {number} [options.showTime=3000] Duration in ms to show popup (0 for manual close only)
+     * @param {number} [options.animationDuration=300] Duration in ms for popup animation
+     * @param {boolean} [options.showProgressBar=false] Whether to show a progress bar for auto-close
+     * @returns {Object} Object containing popup ID and control methods
      */
     function renderPopup(message = '', type = 'success', options = {}) {
         ensureStyles();
         
         // Default options
         const settings = {
-            afterTime: 0,        // Delay before showing
-            showTime: 3000,      // Auto-close time (0 for manual close only)
-            title: '',           // Custom title (if not provided, uses default for type)
-            confirmText: 'OK',   // Button text
-            onConfirm: null,     // Callback when confirmed
+            afterTime: 0,           // Delay before showing
+            showTime: 3000,         // Auto-close time (0 for manual close only)
+            title: '',              // Custom title (if not provided, uses default for type)
+            confirmText: 'OK',      // Button text
+            onConfirm: null,        // Callback when confirmed
+            animationDuration: 300, // Animation duration in ms
+            showProgressBar: false, // Show progress bar for auto-close timing
             ...options
         };
         
@@ -524,6 +530,16 @@
         popup.id = popupId;
         popup.className = 'magical-popup';
         
+        // Store callbacks and settings on the popup element
+        popup._onConfirm = settings.onConfirm;
+        popup._settings = settings;
+        
+        // Create progress bar HTML if enabled
+        const progressBarHTML = settings.showProgressBar && settings.showTime > 0 ? 
+            `<div class="magical-popup-progress" style="position: absolute; bottom: 0; left: 0; height: 3px; 
+                  width: 100%; background-color: ${titleColor}; transform-origin: left; 
+                  transition: transform ${settings.showTime}ms linear;"></div>` : '';
+        
         // Create popup HTML structure
         popup.innerHTML = `
             <div class="magical-popup-backdrop"></div>
@@ -531,7 +547,7 @@
                 <div style="background: ${bgColor}; backdrop-filter: blur(10px); 
                             border-top: 2px solid ${borderColor}; border-radius: 0.75rem; 
                             padding: 1.5rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); 
-                            display: flex; flex-direction: column; align-items: center; text-align: center;">
+                            display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; overflow: hidden;">
                     <div style="color: ${titleColor}; margin-bottom: 0.5rem; animation: bounce 1s infinite;">
                         ${icon}
                     </div>
@@ -541,6 +557,7 @@
                     <p style="color: #4b5563; font-family: 'Itim', cursive, sans-serif;">${message}</p>
                     <button type="button" class="magic-button" style="margin-top: 1.25rem; padding: 0.5rem 2rem;" 
                             onclick="MagicalUI.closePopup('${popupId}')">${settings.confirmText}</button>
+                    ${progressBarHTML}
                 </div>
             </div>
         `;
@@ -578,19 +595,96 @@
             sparklesContainer.appendChild(sparkle);
         }
         
-        // Show the popup after the specified delay
-        setTimeout(() => {
-            popup.classList.add('show');
+        // Create popup controller with timing methods
+        const popupController = {
+            id: popupId,
             
+            // Show the popup
+            show: function(delay = null) {
+                const delayTime = delay !== null ? delay : settings.afterTime;
+                return new Promise(resolve => {
+                    setTimeout(() => {
+                        const popupEl = document.getElementById(this.id);
+                        if (popupEl) {
+                            popupEl.classList.add('show');
+                            
+                            // Animate progress bar if enabled
+                            if (settings.showProgressBar && settings.showTime > 0) {
+                                setTimeout(() => {
+                                    const progressBar = popupEl.querySelector('.magical-popup-progress');
+                                    if (progressBar) {
+                                        progressBar.style.transform = 'scaleX(0)';
+                                    }
+                                }, 50); // Small delay to ensure transition works
+                            }
+                            
+                            resolve(true);
+                        } else {
+                            resolve(false);
+                        }
+                    }, delayTime);
+                });
+            },
+            
+            // Hide the popup
+            hide: function(runCallback = true) {
+                return new Promise(resolve => {
+                    closePopup(this.id, runCallback);
+                    setTimeout(resolve, settings.animationDuration);
+                });
+            },
+            
+            // Reset auto-close timer
+            resetTimer: function(newDuration = null) {
+                const popupEl = document.getElementById(this.id);
+                if (!popupEl) return false;
+                
+                // Clear any existing auto-close timer
+                if (popupEl._autoCloseTimer) {
+                    clearTimeout(popupEl._autoCloseTimer);
+                }
+                
+                // Set new timer if duration is provided and greater than 0
+                const duration = newDuration !== null ? newDuration : settings.showTime;
+                if (duration > 0) {
+                    popupEl._autoCloseTimer = setTimeout(() => {
+                        closePopup(this.id);
+                    }, duration);
+                    
+                    // Reset progress bar if it exists
+                    if (settings.showProgressBar) {
+                        const progressBar = popupEl.querySelector('.magical-popup-progress');
+                        if (progressBar) {
+                            progressBar.style.transition = 'none';
+                            progressBar.style.transform = 'scaleX(1)';
+                            setTimeout(() => {
+                                progressBar.style.transition = `transform ${duration}ms linear`;
+                                progressBar.style.transform = 'scaleX(0)';
+                            }, 50);
+                        }
+                    }
+                    
+                    return true;
+                }
+                
+                return false;
+            }
+        };
+        
+        // Show the popup after the specified delay
+        popupController.show().then(() => {
             // Auto-close if showTime is provided and greater than 0
             if (settings.showTime > 0) {
-                setTimeout(() => {
-                    closePopup(popupId);
-                }, settings.showTime);
+                const popup = document.getElementById(popupId);
+                if (popup) {
+                    popup._autoCloseTimer = setTimeout(() => {
+                        closePopup(popupId);
+                    }, settings.showTime);
+                }
             }
-        }, settings.afterTime);
+        });
         
-        return popupId;
+        return popupController;
     }
 
     /**
@@ -603,18 +697,28 @@
         const popup = document.getElementById(popupId);
         if (!popup) return;
         
+        // Clear any auto-close timer
+        if (popup._autoCloseTimer) {
+            clearTimeout(popup._autoCloseTimer);
+        }
+        
+        // Get animation duration from settings or use default
+        const animDuration = popup._settings?.animationDuration || 300;
+        
         // Hide with animation
         popup.classList.remove('show');
         
         // Remove from DOM after animation
         setTimeout(() => {
-            popup.remove();
+            if (popup.parentNode) {
+                popup.parentNode.removeChild(popup);
+            }
             
             // Call onConfirm callback if it exists
             if (runOnConfirm && popup._onConfirm && typeof popup._onConfirm === 'function') {
                 popup._onConfirm();
             }
-        }, 300);
+        }, animDuration);
     }
     
     /**
