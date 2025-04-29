@@ -1,6 +1,8 @@
 <?php
 require_once '../MagicalTheme.php';
 
+include '../includes/nav.php';
+
 // Initialize the theme with blue color scheme
 $theme = new MagicalTheme('blue');
 
@@ -9,6 +11,29 @@ $email = '';
 $password = '';
 $errors = [];
 $success = false;
+
+// Check if URL has error parameters
+if (isset($_GET['error'])) {
+    $errorType = $_GET['error'];
+    
+    // Handle different error types
+    switch ($errorType) {
+        case 'invalid_credentials':
+            $errorMessage = 'Invalid email or password. Please try again.';
+            break;
+        case 'missing_fields':
+            $errorMessage = 'Please fill in all required fields.';
+            break;
+        case 'session_expired':
+            $errorMessage = 'Your session has expired. Please login again.';
+            break;
+        default:
+            $errorMessage = 'An error occurred. Please try again.';
+    }
+    
+    // Add error to the errors array
+    $errors['login'] = $errorMessage;
+}
 
 // Check if form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -66,11 +91,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php echo $theme->render(); ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* Magical required field styles */
+        .required-field::after {
+            content: "✨";
+            margin-left: 5px;
+            color: var(--primary);
+            animation: sparkle 1.5s infinite;
+            opacity: 0.8;
+            font-size: 0.8em;
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.5; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2) rotate(10deg); }
+        }
+        
+        .magic-input:required:invalid:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.3), 0 0 10px rgba(var(--primary-rgb), 0.2);
+            background-image: linear-gradient(to right, rgba(var(--primary-rgb), 0.05), transparent);
+        }
+    </style>
 </head>
 <body class="bg-light">
     <?php 
     $websiteName = 'Azure Cards';
-    include '../includes/nav.php'; 
+    renderNavbar();
+    
+    // Show popup if error exists in URL
+    if (isset($_GET['error'])) {
+        echo $theme->renderPopup($errorMessage, 'error', 300, 5000);
+    }
     ?>
     
     <div class="container mx-auto px-4 py-10 min-h-screen">
@@ -81,22 +133,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <p class="text-gray-600">Sign in to continue your magical journey</p>
                 </div>
                 
-                <?php if (!empty($errors['login'])): ?>
+                <?php if (!empty($errors['login']) && !isset($_GET['error'])): ?>
                     <div class="bg-danger/10 border-l-4 border-danger text-danger p-4 mb-6 rounded">
                         <p><?php echo $errors['login']; ?></p>
                     </div>
                 <?php endif; ?>
                 
-                <form method="POST" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
+                <form method="POST" action="../api/action/login.php">
                     <div class="mb-4">
-                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1 required-field">Email Address</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-envelope text-gray-400"></i>
                             </div>
                             <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" 
                                    class="magic-input pl-10 block w-full rounded-md focus:ring-primary focus:border-primary"
-                                   placeholder="you@example.com">
+                                   placeholder="you@example.com" required>
+                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none opacity-50">
+                                <i class="fas fa-magic text-primary hidden magic-required-icon"></i>
+                            </div>
                         </div>
                         <?php if (!empty($errors['email'])): ?>
                             <p class="mt-1 text-sm text-danger"><?php echo $errors['email']; ?></p>
@@ -104,14 +159,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     
                     <div class="mb-6">
-                        <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-1 required-field">Password</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-lock text-gray-400"></i>
                             </div>
                             <input type="password" id="password" name="password" 
                                    class="magic-input pl-10 block w-full rounded-md focus:ring-primary focus:border-primary"
-                                   placeholder="Enter your password">
+                                   placeholder="Enter your password" required>
+                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none opacity-50">
+                                <i class="fas fa-magic text-primary hidden magic-required-icon"></i>
+                            </div>
                         </div>
                         <?php if (!empty($errors['password'])): ?>
                             <p class="mt-1 text-sm text-danger"><?php echo $errors['password']; ?></p>
@@ -187,5 +245,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </footer>
     
     <script src="../js/game.js"></script>
+    <script>
+        // Show magical icon when required field is empty
+        document.addEventListener('DOMContentLoaded', function() {
+            const requiredInputs = document.querySelectorAll('input[required]');
+            
+            requiredInputs.forEach(input => {
+                const magicIcon = input.parentNode.querySelector('.magic-required-icon');
+                
+                // Check validity on blur
+                input.addEventListener('blur', function() {
+                    if (!this.validity.valid) {
+                        magicIcon.classList.remove('hidden');
+                        magicIcon.classList.add('animate-ping-slow');
+                    } else {
+                        magicIcon.classList.add('hidden');
+                        magicIcon.classList.remove('animate-ping-slow');
+                    }
+                });
+                
+                // Check validity on input
+                input.addEventListener('input', function() {
+                    if (this.validity.valid) {
+                        magicIcon.classList.add('hidden');
+                        magicIcon.classList.remove('animate-ping-slow');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

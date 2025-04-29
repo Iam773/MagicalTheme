@@ -1436,7 +1436,7 @@ class MagicalTheme {
                 <div class="flex justify-between h-16">
                     <!-- Logo and Brand -->
                     <div class="flex items-center">
-                        <a href="dashboard.php" class="flex items-center space-x-2 group">
+                        <a href="index.php" class="flex items-center space-x-2 group">
                             <div class="relative">
                                 <div class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center 
                                             transition-transform group-hover:scale-110">
@@ -2314,5 +2314,15 @@ class MagicalTheme {
                                 </a>
                             </div>
                         </div>';
+    }
+
+    /**
+     * Outputs a script tag with theme colors as a data attribute for JavaScript
+     * 
+     * @return string HTML script tag with theme colors data
+     */
+    public function outputThemeColorsForJS() {
+        $colors = json_encode($this->colors);
+        return '<script id="magical-theme-colors" type="application/json" data-colors=\'' . $colors . '\'></script>';
     }
 }

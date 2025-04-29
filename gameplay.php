@@ -128,13 +128,44 @@ if ($playerCount == 3) {
     <style>
         /* Gameplay specific styles */
         .battle-arena {
-            height: calc(100vh - 130px);
-            min-height: 720px;
+            height: 100vh;
+            width: 100vw;
+            position: fixed;
+            top: 0;
+            left: 0;
             background: linear-gradient(to bottom, #0c4a6e, #0284c7);
-            position: relative;
             overflow: hidden;
+            z-index: 40;
+        }
+
+        .container {
+            padding: 0 !important;
+            max-width: none !important;
+        }
+
+        /* Adjust nav z-index to stay above battle arena */
+        .navbar {
+            z-index: 45;
+            position: relative;
+        }
+
+        /* Update game-center position for fullscreen */
+        .game-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70%;
+            height: 60%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
             border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
         }
         
         .battle-arena::before {
@@ -144,31 +175,17 @@ if ($playerCount == 3) {
             left: 0;
             right: 0;
             bottom: 0;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath opacity='.5' d='M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath opacity='.5' d='M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
             opacity: 0.5;
-        }
-        
-        .game-center {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 30%;
-            height: 30%;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
-            border-radius: 50%;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
         }
         
         .player-zone {
             position: absolute;
             transition: all 0.3s ease;
             z-index: 20;
+            background: transparent;
+            border: none;
+            outline: none;
         }
         
         /* Player zone positioning for different layouts */
@@ -335,8 +352,6 @@ if ($playerCount == 3) {
         }
         
         .game-card-mini {
-            width: 80px;
-            height: 120px;
             border-radius: 8px;
             overflow: hidden;
             background: white;
@@ -346,9 +361,53 @@ if ($playerCount == 3) {
             transform-origin: bottom center;
             cursor: pointer;
         }
-        
-        .game-card-mini:hover {
-            transform: translateY(-20px) scale(1.1);
+
+        /* Player 1 (bottom) - ใหญ่ที่สุด */
+        .player-1 .game-card-mini {
+            width: 100px;
+            height: 150px;
+            transform: translateY(-40px);
+        }
+
+        /* Player 2 (top) - เล็กกว่า player 1 */
+        .player-2 .game-card-mini {
+            width: 100px;
+            height: 150px;
+            transform: translateY(40px);
+        }
+
+        /* Player 3 (left) - เล็กที่สุด */
+        .player-3 .game-card-mini {
+            width: 80px;
+            height: 120px;
+            transform: translateX(40px);
+        }
+
+        /* Player 4 (right) - เล็กที่สุด */
+        .player-4 .game-card-mini {
+            width: 80px;
+            height: 120px;
+            transform: translateX(-40px);
+        }
+
+        /* Hover effects for each player */
+        .player-1 .game-card-mini:hover {
+            transform: translateY(-45px) scale(1.1);
+            z-index: 10;
+        }
+
+        .player-2 .game-card-mini:hover {
+            transform: translateY(50px) scale(1.1);
+            z-index: 10;
+        }
+
+        .player-3 .game-card-mini:hover {
+            transform: translateX(50px) scale(1.1);
+            z-index: 10;
+        }
+
+        .player-4 .game-card-mini:hover {
+            transform: translateX(-50px) scale(1.1);
             z-index: 10;
         }
         
@@ -372,18 +431,57 @@ if ($playerCount == 3) {
         }
         
         .field-card {
-            width: 60px;
-            height: 90px;
+            width: 80px;
+            height: 100px;
             border-radius: 6px;
             position: relative;
             box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
             transition: all 0.2s ease;
             overflow: hidden;
         }
+
+        /* Player 1 field cards - ล่าง */
+        .player-1 .field-card {
+            transform: translateY(-100px);
+        }
+
+        /* Player 2 field cards - บน */
+        .player-2 .field-card {
+            transform: translateY(80px);
+        }
+
+        /* Player 3 field cards - ซ้าย */
+        .player-3 .field-card {
+            transform: translateX(40px);
+        }
+
+        /* Player 4 field cards - ขวา */ 
+        .player-4 .field-card {
+            transform: translateX(-40px);
+        }
         
         .field-card:hover {
-            transform: scale(1.1);
             z-index: 5;
+        }
+
+        /* Player 1 hover - ล่าง */
+        .player-1 .field-card:hover {
+            transform: translateY(-110px) scale(1.1);
+        }
+
+        /* Player 2 hover - บน */
+        .player-2 .field-card:hover {
+            transform: translateY(70px) scale(1.1);
+        }
+
+        /* Player 3 hover - ซ้าย */
+        .player-3 .field-card:hover {
+            transform: translateX(50px) scale(1.1);
+        }
+
+        /* Player 4 hover - ขวา */
+        .player-4 .field-card:hover {
+            transform: translateX(-50px) scale(1.1);
         }
         
         .field-card img {
@@ -412,7 +510,7 @@ if ($playerCount == 3) {
         
         .game-controls {
             position: absolute;
-            bottom: 10px;
+            bottom: 200px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
@@ -422,9 +520,9 @@ if ($playerCount == 3) {
         
         .turn-indicator {
             position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
+            bottom: 150px;
+            left: 250px;
+            transform: translateY(-50%);
             background: rgba(0, 0, 0, 0.5);
             color: white;
             padding: 5px 15px;
@@ -445,9 +543,9 @@ if ($playerCount == 3) {
             font-size: 1.2rem;
             color: white;
             position: absolute;
-            top: 60px;
-            left: 50%;
-            transform: translateX(-50%);
+            bottom: 145px;
+            left: 440px;
+            transform: translateY(-50%);
             z-index: 30;
             box-shadow: 0 0 10px rgba(var(--warning-rgb), 0.8);
         }
@@ -496,7 +594,7 @@ if ($playerCount == 3) {
         }
         
         .player-1 .player-effects {
-            bottom: 60px;
+            bottom: 80px;
             left: 10px;
         }
         
@@ -523,7 +621,7 @@ if ($playerCount == 3) {
         .chat-button {
             position: absolute;
             bottom: 20px;
-            right: 20px;
+            right: 80px;
             width: 50px;
             height: 50px;
             background-color: var(--primary);
@@ -623,12 +721,41 @@ if ($playerCount == 3) {
             border: none;
             cursor: pointer;
         }
+
+        /* เพิ่ม CSS ใหม่สำหรับ surrender button */
+        .surrender-button {
+            position: fixed;
+            bottom: 10px;
+            left: 200px;
+            z-index: 100;
+        }
+
+        /* แก้ไข style ของปุ่มให้เข้ากับ theme */
+        .surrender-button button {
+            background: linear-gradient(to right, #ef4444, #dc2626);
+            padding: 5px 16px;
+            border-radius: 8px;
+            color: white;
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .surrender-button button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(185, 28, 28, 0.5);
+            background: linear-gradient(to right, #b91c1c, #991b1b);
+        }
     </style>
 </head>
-<body class="bg-light">
+<body class="bg-light overflow-hidden">
     <?php include 'includes/nav.php'; ?>
     
-    <div class="container mx-auto px-4 py-6">
+    <div class="container">
         <!-- Game Arena -->
         <div class="battle-arena <?php echo $layoutClass; ?>">
             <!-- Turn indicator -->
@@ -775,12 +902,14 @@ if ($playerCount == 3) {
             </div>
         </div>
         
-        <!-- Surrender button outside the game interface -->
-        <div class="text-center mt-4">
-            <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-1 rounded-md text-sm" id="surrender-btn">
-                <i class="fas fa-flag mr-1"></i> Surrender
+        <!-- Surrender button -->
+        <div class="surrender-button">
+            <button id="surrender-btn">
+                <i class="fas fa-flag"></i>
+                <span>Surrender</span>
             </button>
         </div>
+        
     </div>
     
     <!-- Card Preview Modal -->
