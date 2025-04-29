@@ -50,7 +50,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             ]
         ]);
     } else {
-        header("location: ../../auth/login.php?error=invalid_credentials");
+        echo json_encode([
+            "success" => false,
+            "message" => "อีเมลหรือรหัสผ่านไม่ถูกต้อง"
+        ]);
     }
 } else {
     // กรณีไม่ใช่ POST method

@@ -2,9 +2,6 @@
 include_once "../../database/autoloader.php";
 use Database\DB;
 
-// Set content type to JSON
-header('Content-Type: application/json');
-
 // Connect to the database
 DB::connection("../../database/db/games.db");
 
@@ -18,34 +15,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Validate form data
     if (empty($username) || empty($email) || empty($password) || empty($confirm_password)) {
-        echo json_encode([
-            "success" => false,
-            "message" => "กรุณากรอกข้อมูลให้ครบถ้วน"
-        ]);
+        header("location: ../../auth/register.php?error=empty_fields");
         exit;
     }
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        echo json_encode([
-            "success" => false,
-            "message" => "อีเมลไม่ถูกต้อง"
-        ]);
+        header("location: ../../auth/register.php?error=invalid_email");
         exit;
     }
 
     if ($password !== $confirm_password) {
-        echo json_encode([
-            "success" => false,
-            "message" => "รหัสผ่านไม่ตรงกัน"
-        ]);
+        header("location: ../../auth/register.php?error=password_mismatch");
         exit;
     }
 
     if (strlen($password) < 8) {
-        echo json_encode([
-            "success" => false,
-            "message" => "รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร"
-        ]);
+        header("location: ../../auth/register.php?error=password_too_short");
         exit;
     }
 
@@ -55,38 +40,50 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         ->first();
 
     if ($existingUser) {
-        echo json_encode([
-            "success" => false,
-            "message" => "อีเมลนี้ถูกใช้ไปแล้ว"
-        ]);
+        header("location: ../../auth/register.php?error=email_exists");
         exit;
     }
 
     // Hash the password
     $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
+    // Get current datetime for timestamps
+    $currentDateTime = date('Y-m-d H:i:s');
+
     // Insert the new user into the database
     $userId = DB::table('users')->insert([
         'username' => $username,
         'email' => $email,
-        'password' => $hashedPassword
+        'password' => $hashedPassword,
+        'created_at' => $currentDateTime,
+        'updated_at' => $currentDateTime
     ]);
 
     if ($userId) {
+        // เริ่ม session
+        session_start();
+        
+        // เก็บข้อมูลผู้ใช้ใน session
+        $_SESSION['user_id'] = $userId;
+        $_SESSION['email'] = $email;
+        $_SESSION['logged_in'] = true;
+        
+        // ยังคงใช้ JSON response ในกรณีที่ลงทะเบียนสำเร็จ
+        header('Content-Type: application/json');
         echo json_encode([
             "success" => true,
-            "message" => "ลงทะเบียนสำเร็จ"
+            "message" => "ลงทะเบียนสำเร็จ",
+            "user" => [
+                "id" => $userId,
+                "email" => $email
+            ]
         ]);
     } else {
-        echo json_encode([
-            "success" => false,
-            "message" => "เกิดข้อผิดพลาดในการลงทะเบียน"
-        ]);
+        header("location: ../../auth/register.php?error=registration_failed");
+        exit;
     }
 } else {
     // If not a POST request
-    echo json_encode([
-        "success" => false,
-        "message" => "Method not allowed"
-    ]);
+    header("location: ../../auth/register.php?error=method_not_allowed");
+    exit;
 }

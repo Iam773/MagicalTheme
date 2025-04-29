@@ -2315,4 +2315,14 @@ class MagicalTheme {
                             </div>
                         </div>';
     }
+
+    /**
+     * Outputs a script tag with theme colors as a data attribute for JavaScript
+     * 
+     * @return string HTML script tag with theme colors data
+     */
+    public function outputThemeColorsForJS() {
+        $colors = json_encode($this->colors);
+        return '<script id="magical-theme-colors" type="application/json" data-colors=\'' . $colors . '\'></script>';
+    }
 }

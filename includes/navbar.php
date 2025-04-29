@@ -41,7 +41,7 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
     ]);
     
     $theme->addNavItem('Register', [
-        'url' => 'register.php',
+        'url' => 'auth/register.php',
         'icon' => 'fa-user-plus'
     ]);
 }
