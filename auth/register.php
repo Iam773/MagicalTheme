@@ -161,7 +161,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <label for="email" class="block text-sm font-medium text-gray-700 mb-1 required-field">Email Address</label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <i class="fas fa-envelope text-gray-400"></i>
+                                    <i class="fas fa-envelope text-gray-400"></i> 
                                 </div>
                                 <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" 
                                        class="magic-input pl-10 block w-full rounded-md focus:ring-primary focus:border-primary"
