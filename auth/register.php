@@ -56,17 +56,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // If no validation errors, register the user
     if (empty($errors)) {
-        // In a real application, you would save user data to database
-        // For demo purposes, we'll just show a success message
+        // Show success message using MagicalUI popup
+        echo "<script>
+            document.addEventListener('DOMContentLoaded', function() {
+                MagicalUI.renderPopup(
+                    'Account created successfully! Welcome to Azure Cards.',
+                    'success',
+                    {
+                        title: 'Welcome!',
+                        confirmText: 'Continue',
+                        onConfirm: function() {
+                            window.location.href = '../index.php';
+                        }
+                    }
+                );
+                // Auto redirect after 2 seconds
+                setTimeout(function() {
+                    window.location.href = '../index.php';
+                }, 2000);
+            });
+        </script>";
         $success = true;
-        
-        // Clear form data
-        $username = '';
-        $email = '';
-        
-        // Redirect to login page
-        header('Location: login.php');
-        exit;
     }
 }
 ?>
@@ -116,147 +126,129 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="container mx-auto px-4 py-10 min-h-screen">
         <div class="max-w-lg mx-auto">
             <div class="magic-card shadow-magical">
-                <?php if ($success): ?>
-                    <div class="text-center py-8">
-                        <div class="inline-block p-4 rounded-full bg-success/20 text-success mb-4">
-                            <i class="fas fa-check-circle text-4xl"></i>
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl font-itim text-primary">Create Your Account</h1>
+                    <p class="text-gray-600">Join the magical world of Azure Cards</p>
+                </div>
+                
+                <form method="POST" id="registerForm">
+                    <div class="mb-4">
+                        <label for="username" class="block text-sm font-medium text-gray-700 mb-1 required-field">Username</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-user text-gray-400"></i>
+                            </div>
+                            <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($username); ?>" 
+                                   class="magic-input pl-10 block w-full rounded-md focus:ring-primary focus:border-primary"
+                                   placeholder="Choose a username" required>
+                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none opacity-50">
+                                <i class="fas fa-magic text-primary hidden magic-required-icon"></i>
+                            </div>
                         </div>
-                        <h2 class="text-2xl font-itim text-primary mb-2">Registration Successful!</h2>
-                        <p class="text-gray-600 mb-6">Your account has been created successfully.</p>
-                        <div class="flex justify-center space-x-4">
-                            <a href="login.php" class="magic-button magic-button-primary">
-                                <i class="fas fa-sign-in-alt mr-2"></i> Login Now
-                            </a>
-                            <a href="../index.php" class="magic-button magic-button-secondary">
-                                <i class="fas fa-home mr-2"></i> Homepage
-                            </a>
-                        </div>
-                    </div>
-                <?php else: ?>
-                    <div class="text-center mb-8">
-                        <h1 class="text-3xl font-itim text-primary">Create Your Account</h1>
-                        <p class="text-gray-600">Join the magical world of Azure Cards</p>
+                        <?php if (!empty($errors['username'])): ?>
+                            <p class="mt-1 text-sm text-danger"><?php echo $errors['username']; ?></p>
+                        <?php endif; ?>
                     </div>
                     
-                    <form method="POST" action="../api/action/register.php">
-                        <div class="mb-4">
-                            <label for="username" class="block text-sm font-medium text-gray-700 mb-1 required-field">Username</label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <i class="fas fa-user text-gray-400"></i>
-                                </div>
-                                <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($username); ?>" 
-                                       class="magic-input pl-10 block w-full rounded-md focus:ring-primary focus:border-primary"
-                                       placeholder="Choose a username" required>
-                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none opacity-50">
-                                    <i class="fas fa-magic text-primary hidden magic-required-icon"></i>
-                                </div>
+                    <div class="mb-4">
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1 required-field">Email Address</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-envelope text-gray-400"></i> 
                             </div>
-                            <?php if (!empty($errors['username'])): ?>
-                                <p class="mt-1 text-sm text-danger"><?php echo $errors['username']; ?></p>
-                            <?php endif; ?>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <label for="email" class="block text-sm font-medium text-gray-700 mb-1 required-field">Email Address</label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <i class="fas fa-envelope text-gray-400"></i> 
-                                </div>
-                                <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" 
-                                       class="magic-input pl-10 block w-full rounded-md focus:ring-primary focus:border-primary"
-                                       placeholder="you@example.com" required>
-                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none opacity-50">
-                                    <i class="fas fa-magic text-primary hidden magic-required-icon"></i>
-                                </div>
+                            <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" 
+                                   class="magic-input pl-10 block w-full rounded-md focus:ring-primary focus:border-primary"
+                                   placeholder="you@example.com" required>
+                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none opacity-50">
+                                <i class="fas fa-magic text-primary hidden magic-required-icon"></i>
                             </div>
-                            <?php if (!empty($errors['email'])): ?>
-                                <p class="mt-1 text-sm text-danger"><?php echo $errors['email']; ?></p>
-                            <?php endif; ?>
                         </div>
-                        
-                        <div class="mb-4">
-                            <label for="password" class="block text-sm font-medium text-gray-700 mb-1 required-field">Password</label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <i class="fas fa-lock text-gray-400"></i>
-                                </div>
-                                <input type="password" id="password" name="password" 
-                                       class="magic-input pl-10 block w-full rounded-md focus:ring-primary focus:border-primary"
-                                       placeholder="Create a password">
-                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
-                                    <i class="fas fa-eye text-gray-400 cursor-pointer toggle-password"></i>
-                                </div>
-                            </div>
-                            <?php if (!empty($errors['password'])): ?>
-                                <p class="mt-1 text-sm text-danger"><?php echo $errors['password']; ?></p>
-                            <?php else: ?>
-                                <p class="mt-1 text-xs text-gray-500">Password must be at least 8 characters long</p>
-                            <?php endif; ?>
-                        </div>
-                        
-                        <div class="mb-6">
-                            <label for="confirm_password" class="block text-sm font-medium text-gray-700 mb-1 required-field">Confirm Password</label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <i class="fas fa-lock text-gray-400"></i>
-                                </div>
-                                <input type="password" id="confirm_password" name="confirm_password" 
-                                       class="magic-input pl-10 block w-full rounded-md focus:ring-primary focus:border-primary"
-                                       placeholder="Confirm your password" required>
-                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none opacity-50">
-                                    <i class="fas fa-magic text-primary hidden magic-required-icon"></i>
-                                </div>
-                            </div>
-                            <?php if (!empty($errors['confirm_password'])): ?>
-                                <p class="mt-1 text-sm text-danger"><?php echo $errors['confirm_password']; ?></p>
-                            <?php endif; ?>
-                        </div>
-                        
-                        <div class="mb-6">
-                            <div class="flex items-start">
-                                <div class="flex items-center h-5">
-                                    <input type="checkbox" id="agree_terms" name="agree_terms" 
-                                           class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded" required>
-                                </div>
-                                <div class="ml-3 text-sm">
-                                    <label for="agree_terms" class="text-gray-700 required-field">
-                                        I agree to the <a href="#" class="text-primary">Terms of Service</a> and 
-                                        <a href="#" class="text-primary">Privacy Policy</a>
-                                    </label>
-                                </div>
-                            </div>
-                            <?php if (!empty($errors['agree_terms'])): ?>
-                                <p class="mt-1 text-sm text-danger"><?php echo $errors['agree_terms']; ?></p>
-                            <?php endif; ?>
-                        </div>
-                        
-                        <div class="mb-6">
-                            <button type="submit" class="w-full magic-button magic-button-primary py-2 px-4 rounded-md">
-                                <i class="fas fa-user-plus mr-2"></i> Create Account
-                            </button>
-                        </div>
-                        
-                        <div class="relative flex py-4 items-center">
-                            <div class="flex-grow border-t border-gray-300"></div>
-                            <span class="flex-shrink mx-3 text-gray-600 text-sm">or sign up with</span>
-                            <div class="flex-grow border-t border-gray-300"></div>
-                        </div>
-                        
-                        <div class="grid grid-cols-2 gap-4 mb-6">
-                            <button type="button" class="w-full bg-[#1877F2] text-white py-2 px-4 rounded-md flex items-center justify-center">
-                                <i class="fab fa-facebook-f mr-2"></i> Facebook
-                            </button>
-                            <button type="button" class="w-full bg-[#4285F4] text-white py-2 px-4 rounded-md flex items-center justify-center">
-                                <i class="fab fa-google mr-2"></i> Google
-                            </button>
-                        </div>
-                    </form>
-                    
-                    <div class="text-center mt-4">
-                        <p class="text-gray-600">Already have an account? <a href="login.php" class="text-primary hover:text-primary-dark font-medium">Sign in</a></p>
+                        <?php if (!empty($errors['email'])): ?>
+                            <p class="mt-1 text-sm text-danger"><?php echo $errors['email']; ?></p>
+                        <?php endif; ?>
                     </div>
-                <?php endif; ?>
+                    
+                    <div class="mb-4">
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-1 required-field">Password</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-lock text-gray-400"></i>
+                            </div>
+                            <input type="password" id="password" name="password" 
+                                   class="magic-input pl-10 block w-full rounded-md focus:ring-primary focus:border-primary"
+                                   placeholder="Create a password">
+                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                <i class="fas fa-eye text-gray-400 cursor-pointer toggle-password"></i>
+                            </div>
+                        </div>
+                        <?php if (!empty($errors['password'])): ?>
+                            <p class="mt-1 text-sm text-danger"><?php echo $errors['password']; ?></p>
+                        <?php else: ?>
+                            <p class="mt-1 text-xs text-gray-500">Password must be at least 8 characters long</p>
+                        <?php endif; ?>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label for="confirm_password" class="block text-sm font-medium text-gray-700 mb-1 required-field">Confirm Password</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-lock text-gray-400"></i>
+                            </div>
+                            <input type="password" id="confirm_password" name="confirm_password" 
+                                   class="magic-input pl-10 block w-full rounded-md focus:ring-primary focus:border-primary"
+                                   placeholder="Confirm your password" required>
+                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none opacity-50">
+                                <i class="fas fa-magic text-primary hidden magic-required-icon"></i>
+                            </div>
+                        </div>
+                        <?php if (!empty($errors['confirm_password'])): ?>
+                            <p class="mt-1 text-sm text-danger"><?php echo $errors['confirm_password']; ?></p>
+                        <?php endif; ?>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <div class="flex items-start">
+                            <div class="flex items-center h-5">
+                                <input type="checkbox" id="agree_terms" name="agree_terms" 
+                                       class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded" required>
+                            </div>
+                            <div class="ml-3 text-sm">
+                                <label for="agree_terms" class="text-gray-700 required-field">
+                                    I agree to the <a href="#" class="text-primary">Terms of Service</a> and 
+                                    <a href="#" class="text-primary">Privacy Policy</a>
+                                </label>
+                            </div>
+                        </div>
+                        <?php if (!empty($errors['agree_terms'])): ?>
+                            <p class="mt-1 text-sm text-danger"><?php echo $errors['agree_terms']; ?></p>
+                        <?php endif; ?>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <button type="submit" class="w-full magic-button magic-button-primary py-2 px-4 rounded-md">
+                            <i class="fas fa-user-plus mr-2"></i> Create Account
+                        </button>
+                    </div>
+                    
+                    <div class="relative flex py-4 items-center">
+                        <div class="flex-grow border-t border-gray-300"></div>
+                        <span class="flex-shrink mx-3 text-gray-600 text-sm">or sign up with</span>
+                        <div class="flex-grow border-t border-gray-300"></div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <button type="button" class="w-full bg-[#1877F2] text-white py-2 px-4 rounded-md flex items-center justify-center">
+                            <i class="fab fa-facebook-f mr-2"></i> Facebook
+                        </button>
+                        <button type="button" class="w-full bg-[#4285F4] text-white py-2 px-4 rounded-md flex items-center justify-center">
+                            <i class="fab fa-google mr-2"></i> Google
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="text-center mt-4">
+                    <p class="text-gray-600">Already have an account? <a href="login.php" class="text-primary hover:text-primary-dark font-medium">Sign in</a></p>
+                </div>
             </div>
             
             <?php if (!$success): ?>
@@ -296,7 +288,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script src="../js/game.js"></script>
     <script src="../assets/js/MagicalUI.js"></script>
     <script>
-        // Password visibility toggle
         document.addEventListener('DOMContentLoaded', function() {
             // Example 1: Basic usage with default path
             MagicalUI.setThemeColorsFromPHP('../get-theme-colors.php')
@@ -377,58 +368,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             });
             
             // Password matching validation
-            const form = document.querySelector('form');
+            const form = document.getElementById('registerForm');
             if (form) {
                 form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
                     const password = document.getElementById('password').value;
                     const confirmPassword = document.getElementById('confirm_password').value;
                     
                     if (password !== confirmPassword) {
-                        e.preventDefault(); // Prevent form submission
-                        
-                        // Example 1: Basic usage with type and message
                         MagicalUI.renderPopup(
                             "Passwords do not match. Please make sure both passwords are the same.", 
                             "error"
                         );
-                        
-                        // Example 2: With custom title and button text
-                        // MagicalUI.renderPopup(
-                        //     "Passwords do not match. Please make sure both passwords are the same.", 
-                        //     "error", 
-                        //     {
-                        //         title: "Password Mismatch",
-                        //         confirmText: "Try Again"
-                        //     }
-                        // );
-                        
-                        // Example 3: With callback function when confirmed
-                        // MagicalUI.renderPopup(
-                        //     "Passwords do not match. Please make sure both passwords are the same.", 
-                        //     "error", 
-                        //     {
-                        //         title: "Password Mismatch",
-                        //         confirmText: "I'll Fix It",
-                        //         onConfirm: function() {
-                        //             document.getElementById('confirm_password').focus();
-                        //         }
-                        //     }
-                        // );
-                        
-                        // Example 4: With auto-close timing options
-                        // MagicalUI.renderPopup(
-                        //     "Passwords do not match. Please make sure both passwords are the same.", 
-                        //     "error", 
-                        //     {
-                        //         afterTime: 500,  // Delay showing by 500ms
-                        //         showTime: 5000,  // Auto-close after 5 seconds
-                        //         title: "Password Error"
-                        //     }
-                        // );
-                        
-                        // Focus on confirm password field
                         document.getElementById('confirm_password').focus();
+                        return;
                     }
+
+                    // Send form data to API
+                    fetch('../api/action/register.php', {
+                        method: 'POST',
+                        body: new FormData(this)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            MagicalUI.renderPopup(
+                                'Account created successfully! Welcome to Azure Cards.',
+                                'success',
+                                {
+                                    title: 'Welcome!',
+                                    confirmText: 'Continue',
+                                    onConfirm: function() {
+                                        window.location.href = '../index.php';
+                                    }
+                                }
+                            );
+                            setTimeout(() => {
+                                window.location.href = '../index.php';
+                            }, 2000);
+                        } else {
+                            MagicalUI.renderPopup(
+                                data.message || 'Registration failed. Please try again.',
+                                'error'
+                            );
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        MagicalUI.renderPopup(
+                            'An error occurred during registration. Please try again.',
+                            'error'
+                        );
+                    });
                 });
             }
             
@@ -444,7 +436,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 return container;
             }
-            
           
         });
     </script>
