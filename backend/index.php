@@ -204,6 +204,13 @@ include '../includes/nav.php';
                 <h1><i class="fas fa-hat-wizard"></i> Admin Dashboard</h1>
             </div>
             <div class="content">
+                <!-- Add menu grid before stats -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                    <a href="cards/index.php" class="magic-button magic-button-primary flex items-center justify-center gap-2">
+                        <i class="fas fa-cards"></i> Manage Cards
+                    </a>
+                </div>
+
                 <div class="stats-grid">
                     <div class="stat-card">
                         <h3><i class="fas fa-users"></i> Total Users</h3>
