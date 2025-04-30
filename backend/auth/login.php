@@ -1,6 +1,10 @@
 <?php
 session_start();
 
+require_once '../../MagicalTheme.php';
+$theme = new MagicalTheme('blue');
+include '../../includes/nav.php';
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $config = json_decode(file_get_contents("../../database/db/config.json"), true);
     
@@ -21,28 +25,74 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Admin Login</title>
+    <title>Admin Login - Azure Cards</title>
+    <?php echo $theme->render(); ?>
     <link href="https://fonts.googleapis.com/css2?family=Itim&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="../../assets/js/MagicalUI.js"></script>
+    <link rel="stylesheet" href="../../css/style.css">
     <style>
-        :root {
-            --primary: #3b82f6;
-            --primary-dark: #1e40af;
-            --primary-light: #93c5fd;
-            --text-primary: #1e40af;
-            --blue-800: #1e40af;
-        }
-        
         body {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(29, 78, 216, 0.1));
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             font-family: 'Itim', cursive;
             margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(29, 78, 216, 0.1));
         }
+
+        .navbar {
+            background: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-brand {
+            font-size: 1.5rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--blue-800);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .nav-link:hover {
+            background: var(--blue-100);
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 64px);
+        }
+
         .login-container {
             background: white;
             padding: 2rem;
@@ -52,6 +102,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             max-width: 360px;
             border-top: 4px solid var(--primary);
         }
+
         .login-title {
             text-align: center;
             color: var(--primary);
@@ -77,7 +128,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         .input-group input {
             width: 100%;
             padding: 0.75rem 1rem 0.75rem 2.5rem;
-            border: 1px solid var(--blue-200);
+            border: 2px solid #e5e7eb; /* เพิ่มความหนาและสีของเส้นขอบ */
             border-radius: 0.5rem;
             background: white;
             outline: none;
@@ -124,32 +175,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     </style>
 </head>
-<body>
-    <div class="login-container">
-        <h1 class="login-title">
-            <i class="fas fa-hat-wizard"></i>
-            Admin Login
-        </h1>
-        
-        <?php if (isset($error)): ?>
-            <div class="error-message">
-                <?php echo $error; ?>
-            </div>
-        <?php endif; ?>
+<body class="bg-light">
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a href="../../index.php" class="nav-brand">
+                <i class="fas fa-hat-wizard"></i>
+                Azure Cards
+            </a>
+        </div>
+    </nav>
 
-        <form method="POST" onsubmit="return validateForm(event)">
-            <div class="input-group">
-                <i class="fas fa-user"></i>
-                <input type="text" name="username" id="username" placeholder="Username" required>
-            </div>
-            <div class="input-group">
-                <i class="fas fa-lock"></i>
-                <input type="password" name="password" id="password" placeholder="Password" required>
-            </div>
-            <button type="submit" class="magic-button">
-                <i class="fas fa-sign-in-alt"></i> Login
-            </button>
-        </form>
+    <div class="container">
+        <div class="login-container">
+            <h1 class="login-title">
+                <i class="fas fa-hat-wizard"></i>
+                Admin Login
+            </h1>
+            
+            <?php if (isset($error)): ?>
+                <div class="error-message">
+                    <?php echo $error; ?>
+                </div>
+            <?php endif; ?>
+
+            <form method="POST" onsubmit="return validateForm(event)">
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" name="username" id="username" placeholder="Username" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" name="password" id="password" placeholder="Password" required>
+                </div>
+                <button type="submit" class="w-full magic-button magic-button-primary py-2 px-4 rounded-md" style="background: linear-gradient(to right, #3b82f6, #1e40af);">
+                    <i class="fas fa-sign-in-alt mr-2"></i> Sign In
+                </button>
+            </form>
+        </div>
     </div>
 
     <script>

@@ -21,6 +21,14 @@ include '../includes/nav.php';
     <script src="../assets/js/MagicalUI.js"></script>
     <link rel="stylesheet" href="../css/style.css">
     <style>
+        body {
+            min-height: 100vh;
+            font-family: 'Itim', cursive;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(29, 78, 216, 0.1));
+        }
+
         :root {
             --primary: #3b82f6;
             --primary-dark: #1d4ed8;
@@ -29,14 +37,6 @@ include '../includes/nav.php';
             --blue-800: #1e40af;
         }
         
-        body {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(29, 78, 216, 0.1));
-            min-height: 100vh;
-            font-family: 'Itim', cursive;
-            margin: 0;
-            padding: 0;
-        }
-
         .container {
             max-width: 1400px; /* เพิ่มขนาดจาก 1200px */
             margin: 0 auto;
